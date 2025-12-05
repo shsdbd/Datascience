@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 import time
 from datetime import datetime
 import random
+import sys
 
 # ---------------------------------------------------------
 # 1. 데이터 처리 클래스 (Data Processing)
@@ -31,8 +32,8 @@ class StockDataProcessor:
         try:
             print("Fetching S&P 500 IT sector tickers from Wikipedia...")
             url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-            headers = {'User-Agent': 'Mozilla/5.0'}
-            tables = pd.read_html(url, storage_options={'User-Agent': headers})
+            # Add a User-Agent header to avoid HTTP Error 403: Forbidden
+            tables = pd.read_html(url, storage_options={'User-Agent': 'Mozilla/5.0'})
             sp500_df = tables[0]
             
             it_tickers = sp500_df[sp500_df['GICS Sector'] == 'Information Technology']['Symbol'].tolist()
@@ -310,13 +311,14 @@ def validate_and_plot_ticker(model, ticker, processor, config, timestamp):
     predicted_price, real_price, original_rmse = evaluate_model(model, X_seq, X_static, y, processor)
     print(f"Original RMSE for {ticker}: {original_rmse:.4f}")
 
-    # 4. [추가] 예측값 보정 (Offset Correction)
-    # 실제값의 첫 번째 지점과 예측값의 첫 번째 지점의 차이를 offset으로 사용
-    if len(real_price) > 0 and len(predicted_price) > 0:
-        offset = real_price[0] - predicted_price[0]
+    # 4. [수정] 예측값 보정 (Moving Average Offset Correction)
+    # 초반 5개 지점의 평균 차이를 offset으로 사용
+    correction_window = 5
+    if len(real_price) > correction_window and len(predicted_price) > correction_window:
+        offset = np.mean(real_price[:correction_window] - predicted_price[:correction_window])
         adjusted_predicted_price = predicted_price + offset
         corrected_rmse = math.sqrt(mean_squared_error(real_price, adjusted_predicted_price))
-        print(f"Corrected RMSE for {ticker}: {corrected_rmse:.4f}")
+        print(f"Corrected RMSE for {ticker} (MA Offset): {corrected_rmse:.4f}")
     else:
         adjusted_predicted_price = predicted_price
         corrected_rmse = original_rmse
@@ -332,7 +334,7 @@ def validate_and_plot_ticker(model, ticker, processor, config, timestamp):
     plt.legend()
     plt.grid(True)
     
-    plot_filename = f"validation_plot_{ticker}_{timestamp}.png"
+    plot_filename = f"validation_plot_HybridLSTM_{ticker}_{timestamp}.png"
     plt.savefig(plot_filename)
     print(f"Validation plot saved to {plot_filename}")
     plt.close() # Close the figure to free memory
@@ -395,16 +397,36 @@ def main():
     print(f"Final Training Loss: {final_loss:.6f}")
     print(f"Overall Test Set RMSE: {test_rmse:.4f}")
     
-    # 8. 결과 로깅
+    # 8. 결과 로깅 및 스크립트 출력
     log_results(log_file, timestamp, model_name, training_time, final_loss, test_rmse)
 
-    # 9. [추가] 2개 종목 무작위 선정 및 개별 검증
-    if len(test_tickers) >= 2:
+    # run_all_models.py를 위한 머신 리더블 출력
+    print("\n--- SCRIPT_OUTPUT ---")
+    print(f"MODEL_NAME={model_name}")
+    print(f"TRAINING_TIME={training_time:.2f}")
+    print(f"FINAL_LOSS={final_loss:.6f}")
+    print(f"TEST_RMSE={test_rmse:.4f}")
+    loss_history_str = ",".join(map(str, loss_history))
+    print(f"LOSS_HISTORY=[{loss_history_str}]")
+    print("--- END_SCRIPT_OUTPUT ---")
+
+    # 9. [수정] 커맨드 라인 인자 또는 무작위 선정으로 개별 검증
+    validation_tickers = []
+    # sys.argv[0] is the script name, arguments start from [1]
+    if len(sys.argv) > 1:
+        validation_tickers = sys.argv[1:]
+        print(f"\nUsing tickers from command-line arguments for validation: {', '.join(validation_tickers)}")
+    elif len(test_tickers) >= 2:
+        # Fallback to random sampling if no arguments are given
+        random.seed() # Ensure randomness for standalone runs
         validation_tickers = random.sample(test_tickers, 2)
+        print(f"\nRandomly selected tickers for validation: {', '.join(validation_tickers)}")
+
+    if validation_tickers:
         for ticker in validation_tickers:
             validate_and_plot_ticker(model, ticker, processor, CONFIG, timestamp)
     else:
-        print("\nNot enough test tickers to perform individual validation.")
+        print("\nNot enough test tickers or no tickers provided for individual validation.")
 
 if __name__ == "__main__":
     main()

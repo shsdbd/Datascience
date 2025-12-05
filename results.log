@@ -1,0 +1,15 @@
+Timestamp: 251205180609, Model: Hybrid RNN, TrainingTime: 53.61s, FinalLoss: 0.000871, TestRMSE: 179.2277
+Timestamp: 251205180916, Model: Hybrid Transformer, TrainingTime: 171.09s, FinalLoss: 0.000920, TestRMSE: 58.3043
+Timestamp: 251205181350, Model: Hybrid LSTM, TrainingTime: 57.21s, FinalLoss: 0.000627, TestRMSE: 40.5108
+Timestamp: 251205191355, Model: Hybrid RNN, TrainingTime: 52.37s, FinalLoss: 0.000809, TestRMSE: 311.0847
+Timestamp: 251205191819, Model: Hybrid LSTM, TrainingTime: 51.83s, FinalLoss: 0.000730, TestRMSE: 34.5581
+Timestamp: 251205191936, Model: Hybrid RNN, TrainingTime: 52.16s, FinalLoss: 0.000807, TestRMSE: 162.7583
+Timestamp: 251205192054, Model: Hybrid Transformer, TrainingTime: 174.41s, FinalLoss: 0.000846, TestRMSE: 373.2001
+Timestamp: 251205192831, Model: Hybrid RNN, TrainingTime: 355.39s, FinalLoss: 0.005670, TestRMSE: 6.2779
+Timestamp: 251205194957, Model: Hybrid LSTM, TrainingTime: 349.61s, FinalLoss: 0.002283, TestRMSE: 3.7908
+Timestamp: 251205203002, Model: Hybrid LSTM, TrainingTime: 341.79s, FinalLoss: 0.000710, TestRMSE: 3.3235
+Timestamp: 1205203747, Model: Hybrid RNN, TrainingTime: 338.34s, FinalLoss: 0.009768, TestRMSE: 3.8728
+Timestamp: 251205204530, Model: Hybrid Transformer, TrainingTime: 1244.46s, FinalLoss: 0.000975, TestRMSE: 3.7563
+Timestamp: 251205213816, Model: Hybrid LSTM, TrainingTime: 359.48s, FinalLoss: 0.002070, TestRMSE: 3.2424
+Timestamp: 1205214620, Model: Hybrid RNN, TrainingTime: 372.25s, FinalLoss: 0.003307, TestRMSE: 13.4498
+Timestamp: 251205215435, Model: Hybrid Transformer, TrainingTime: 1238.04s, FinalLoss: 0.028821, TestRMSE: 29.2926

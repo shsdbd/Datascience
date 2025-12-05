@@ -1,0 +1,14 @@
+--- Experiment Run: 251205202956 ---
+Timestamp,Model,TrainingTime(s),FinalLoss,TestRMSE
+251205202956,Hybrid LSTM,341.79,0.000710,3.3235
+251205202956,Hybrid RNN,338.34,0.009768,3.8728
+251205202956,Hybrid Transformer,1244.46,0.000975,3.7563
+------------------------------
+
+--- Experiment Run: 251205213809 ---
+Timestamp,Model,TrainingTime(s),FinalLoss,TestRMSE
+251205213809,Hybrid LSTM,359.48,0.002070,3.2424
+251205213809,Hybrid RNN,372.25,0.003307,13.4498
+251205213809,Hybrid Transformer,1238.04,0.028821,29.2926
+------------------------------
+
