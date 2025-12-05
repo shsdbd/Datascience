@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 import time
 from datetime import datetime
 import random
-
+#github test
 # ---------------------------------------------------------
 # 설정 (Configuration)
 # ---------------------------------------------------------
